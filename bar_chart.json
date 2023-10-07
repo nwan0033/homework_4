@@ -1,0 +1,63 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "title": {"text": "Mean Global GDP Growth Over Time"},
+
+    "data": {
+
+        "url": "https://raw.githubusercontent.com/nwan0033/FIT3179/main/Homework_Source_Code/2_symbol_map/data/global-data-on-sustainable-energy.csv"
+    },
+
+    "params": [
+        {
+            "name": "Year_Below",
+            "value": 2000,
+            "bind": {
+                "input": "range",
+                "min": 2000,
+                "max": 2020,
+                "step": 1,
+                "name": "Maximum Year: "
+            }
+        }
+    ],
+
+    "transform": [
+        {"filter": "datum.Year < Year_Below"},
+
+        {
+            "aggregate": [{
+                "op": "mean",
+                "field": "gdp_growth",
+                "as": "Mean GDP Growth"
+            }],
+            "groupby": ["Year"]
+        }
+    ],
+
+    "encoding": {
+        "x": {"field": "Year", "type": "nominal", "title": "Year"},
+        "y": {"field": "Mean GDP Growth", "type": "quantitative", "title": "Mean GDP Growth (%)"}
+    },
+
+    "layer": [{
+        "mark": "bar",
+        "encoding": {
+            "tooltip": [
+                {"field": "Mean GDP Growth", "type": "quantitative", "format": ".2f", "title": "Mean GDP Growth (%)"},
+                {"field": "Year", "type": "nominal"}
+            ]
+        }
+    }, {
+        "mark": {
+            "type": "text",
+            "align": "center",
+            "baseline": "line-bottom",
+            "dx": 3,
+            "fontSize": 8.5
+        },
+        "encoding": {
+            "text": {"field": "Mean GDP Growth", "type": "quantitative", "format": ".2f"}
+        }
+    }]
+}
